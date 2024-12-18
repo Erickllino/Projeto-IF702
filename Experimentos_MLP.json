@@ -1,0 +1,83 @@
+[
+    {
+      "epochs": 20,
+      "learning_rate": 0.003,
+      "layers": ["L1(28x28,20)", "L2(20,10)"],
+      "precision": 0.78,
+      "recall": 0.76,
+      "f1_score": 0.77
+    },
+    {
+      "epochs": 25,
+      "learning_rate": 0.003,
+      "layers": ["L1(28x28,20)", "L2(20,10)"],
+      "precision": 0.88,
+      "recall": 0.88,
+      "f1_score": 0.88
+    },
+    {
+      "epochs": 30,
+      "learning_rate": 0.003,
+      "layers": ["L1(28x28,20)", "L2(20,10)"],
+      "precision": 0.86,
+      "recall": 0.85,
+      "f1_score": 0.85
+    },
+    {
+      "epochs": 50,
+      "learning_rate": 0.003,
+      "layers": ["L1(28x28,20)", "L2(20,10)"],
+      "precision": 0.89,
+      "recall": 0.89,
+      "f1_score": 0.88
+    },
+    {
+      "epochs": 50,
+      "learning_rate": 0.00003,
+      "layers": ["L1(28x28,20)", "L2(20,10)"],
+      "precision": 0.93,
+      "recall": 0.93,
+      "f1_score": 0.93
+    },
+    {
+      "epochs": 60,
+      "learning_rate": 0.00003,
+      "layers": ["L1(28x28,20)", "L2(20,10)"],
+      "precision": 0.92,
+      "recall": 0.92,
+      "f1_score": 0.92
+    },
+    {
+      "epochs": 70,
+      "learning_rate": 0.00003,
+      "layers": ["L1(28x28,20)", "L2(20,10)"],
+      "precision": 0.94,
+      "recall": 0.94,
+      "f1_score": 0.94
+    },
+    {
+      "epochs": 100,
+      "learning_rate": 0.00003,
+      "layers": ["L1(28x28,20)", "L2(20,10)"],
+      "precision": 0.94,
+      "recall": 0.94,
+      "f1_score": 0.94
+    },
+    {
+      "epochs": 100,
+      "learning_rate": 0.00003,
+      "layers": ["L1(28x28,40)", "L2(40,10)"],
+      "precision": 0.95,
+      "recall": 0.95,
+      "f1_score": 0.95
+    },
+    {
+      "epochs": 100,
+      "learning_rate": 0.00003,
+      "layers": ["L1(28x28,80)", "L2(80,40)", "L3(40,10)"],
+      "precision": 0.97,
+      "recall": 0.97,
+      "f1_score": 0.97
+    }
+  ]
+  
