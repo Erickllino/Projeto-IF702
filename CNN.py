@@ -46,7 +46,7 @@ class MLP_Model(nn.Module):
         # então para a rede MLP teremos uma quantidade de entradas 16x16
 
         #primeira camada terá 100 unidades computacionais
-        self.L1 = nn.Linear(16*16, 100)
+        self.L1 = nn.Linear(10*16*16, 100)
 
         #segunda camada para 50 unidades computacionais
         self.L2 = nn.Linear(100, 50)
@@ -75,6 +75,10 @@ class MLP_Model(nn.Module):
         # segunda camada de pooling
 
         x = self.P2(x)
+
+        # a operação de achatamento
+
+        x = self.Fl()
 
         # as 3 camadas da rede MLP
         
