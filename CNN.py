@@ -54,10 +54,6 @@ class MLP_Model(nn.Module):
         #terceira camada para 10
         self.L3 = nn.Linear(50, 10)
 
-        
-        # SoftMax é uma função para classificação
-
-        self.A2 = nn.Softmax()
 
     def forward(self, x):
         
