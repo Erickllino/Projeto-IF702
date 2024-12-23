@@ -62,13 +62,13 @@ class MLP_Model(nn.Module):
     def forward(self, x):
         
         
-        # primeira camada de convolução
+        # primeira camada de convolução + função relu
         x = F.relu(self.C1(x))
         
         # primeira camada de pooling
         x = self.P1(x)
         
-        # segunda camada de convolução
+        # segunda camada de convolução + função relu
 
         x = F.relu(self.C2(x))
 
@@ -78,9 +78,9 @@ class MLP_Model(nn.Module):
 
         # a operação de achatamento
 
-        x = self.Fl()
+        x = self.Fl(x)
 
-        # as 3 camadas da rede MLP
+        # as 3 camadas da rede MLP + função relu
         
         x = F.relu(self.L1(x))
         
