@@ -1,4 +1,4 @@
-# criando o modelo CNN
+# criando o modelo da rede CNN
 import torch
 import torch.nn as nn
 from torch.utils.data import Dataset, DataLoader
@@ -11,59 +11,77 @@ from torch.utils.data import Dataset, DataLoader
 class MLP_Model(nn.Module):
     
     def __init__(self):
-        super(MLP_Model,self).__init__()
+        super().__init__()
         
-        # nn.Linear(a,b) --> a entrada, b mapeia ?
-        # O primeiro neurônio tem 4 no parênteses pois o data set tem 4 caracteristicas no X,  
+        # transformar a entrada em um único tensor unidimensional
+
+        self.Fl = nn.Flatten()
         
-        self.L1 =  nn.Linear(4,32)
-        self.L2 =  nn.Linear(32,16)
-        self.L3 =  nn.Linear(16,8)
-        self.L4 =  nn.Linear(8,3) 
+        # a primeira camada de convolução
+        # o parâmetro in_channels é para identificar as dimensões que a representação da sua imagem possuí, ex RGB = 3, gray_scale = 1, ou os mapas de características dado por camadas anteriores
+        # e o out_channels é para a saída gerada pela unidade computacional, maiores valores gerarão mais mapas de características
+        # o kernel e o stride podem assumir valores diferentes, mas por fins de simplificação iremos apenas passar inteiros
+
+        self.C1 = nn.Conv2d(in_channels = 1, out_channels = 5, kernel_size = 4, stride = 1 )
+
+        # após a operação de convolução, virá a operação de pooling
+        # existem diferentes formas pela biblioteca para fazer a operação de pooling, mas utilizaremos o Max
+
+        self.P1 = nn.MaxPool2d( kernel_size = 4)
         
+        #segunda camada de convolução + pooling
+
+        self.C2 = nn.Conv2d(in_channels = 5, out_channels = 10, kernel_size = 4, stride = 1)
+        self.P2 = nn.MaxPool2d(kernel_size = 4)
         
-        self.A1 =  nn.ReLU()
-        
-        # No segundo, receberá o tanto que saiu na layer passada, logo:
-        # nn.Linear(c,d) --> c == a, d == quantidasde que sera y previsto, ex: probabilidade de ser cada uma das flores
-        
-        self.L2 =  nn.Linear(32,16)
-        self.L3 =  nn.Linear(16,8)
-        self.L4 =  nn.Linear(8,3) 
+
+        # Após n operações de convolução e pooling a imagem será achatada pela operação Flatten
+        # e será usado em uma rede MLP
+        # o pytorch não oferece maneiras dinâmicas de fazer alteração nos parâmetros da rede após a criação
+        # então o valor das entradas e saídas após cada camada devem ser calculadas: output_size=((input_size−kernel_size+2×padding)/stride) + 1
+        # para a primeira camada após a convolução temos output_size = 25
+        # para a primeira camada após o pooling temos output_size =  22
+        # para a segunda camada após a convolução temos output_size = 19
+        # para a segunda camada após o pooling temos output_size = 16
+        # então para a rede MLP teremos uma quantidade de entradas 16x16
+
+        #primeira camada terá 100 unidades computacionais
+        self.L1 = nn.Linear(16*16, 100)
+
+        #segunda camada para 50 unidades computacionais
+        self.L2 = nn.Linear(100, 50)
+
+        #terceira camada para 10
+        self.L3 = nn.Linear(50, 10)
+
         
         # SoftMax é uma função para classificação
-        
+
         self.A2 = nn.Softmax()
-        
+
     def forward(self, x):
         
         
+        # primeira camada de convolução
+        x = F.relu(self.C1(x))
         
-        x = self.L1(x)
+        # primeira camada de pooling
+        x = self.P1(x)
         
+        # segunda camada de convolução
+
+        x = F.relu(self.C2(x))
+
+        # segunda camada de pooling
+
+        x = self.P2(x)
+
+        # as 3 camadas da rede MLP
         
-        # Aqui estou transformando o vetor inicial de 4 em um vetor de 5
+        x = F.relu(self.L1(x))
         
-        x = self.A1(x)
-       
-        
-        # Escalando o vetor via função sigmoid, outra possivel é a função reLU --> ler mais sobre
-        
-        x = self.L2(x)
-        
-        
-        x = self.A1(x)
-        
+        x = F.relu(self.L2(x))
+
         x = self.L3(x)
-        
-        x = self.A1(x)
-        
-        x = self.L4(x)
-        
-        # Aqui estou transformando o vetor modificado de tamanho 5 em um vetor de 3
-        
-        x = self.A2(x)
-        
-        
         
         return x       
