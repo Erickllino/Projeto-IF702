@@ -59,14 +59,14 @@ class MLP_Model(nn.Module):
         
         
         # primeira camada de convolução + função relu
-        x = F.relu(self.C1(x))
+        x = nn.relu(self.C1(x))
         
         # primeira camada de pooling
         x = self.P1(x)
         
         # segunda camada de convolução + função relu
 
-        x = F.relu(self.C2(x))
+        x = nn.relu(self.C2(x))
 
         # segunda camada de pooling
 
@@ -78,9 +78,9 @@ class MLP_Model(nn.Module):
 
         # as 3 camadas da rede MLP + função relu
         
-        x = F.relu(self.L1(x))
+        x = nn.relu(self.L1(x))
         
-        x = F.relu(self.L2(x))
+        x = nn.relu(self.L2(x))
 
         x = self.L3(x)
         
