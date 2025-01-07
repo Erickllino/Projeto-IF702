@@ -8,7 +8,7 @@ from torch.utils.data import Dataset, DataLoader
 
 # Criar uma classe que herda o modulo nn.Module
 
-class MLP_Model(nn.Module):
+class CNN_Model(nn.Module):
     
     def __init__(self):
         super().__init__()
