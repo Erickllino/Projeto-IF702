@@ -43,7 +43,7 @@ class CNN_Model(nn.Module):
         # para a primeira camada após o pooling temos output_size =  22
         # para a segunda camada após a convolução temos output_size = 19
         # para a segunda camada após o pooling temos output_size = 16
-        # então para a rede MLP teremos uma quantidade de entradas 16x16
+        # então para a rede MLP teremos uma quantidade de entradas 16x16x10
 
         #primeira camada terá 100 unidades computacionais
         self.L1 = nn.Linear(10*16*16, 100)
