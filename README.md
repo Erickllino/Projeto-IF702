@@ -61,8 +61,8 @@ Bruno Antonio dos Santos Bezerra, Erick Vinicius Rebouças Cruz, Gabriel Monteir
 | Learning rate          | 3×10⁻⁵, 3×10⁻², 3×10⁻¹⁰                   |
 | Épocas                 | 20, 50, 80, 100                           |
 
- - Na CNN
- - 
+ - Na CNN:
+   
 | Hiperparâmetro          | Valores testados                          |
 |--------------------------|-------------------------------------------|
 | tamanho kernel           | 2, 4, 8                                   |
