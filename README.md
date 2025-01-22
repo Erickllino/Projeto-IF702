@@ -65,7 +65,7 @@ Bruno Antonio dos Santos Bezerra, Erick Vinicius Rebouças Cruz, Gabriel Monteir
  - 
 | Hiperparâmetro          | Valores testados                          |
 |--------------------------|-------------------------------------------|
-| tamanho kernel           | 2 4 8                                     |
+| tamanho kernel           | 2, 4, 8                                   |
 | stride kernel            | 1, 2                                      |
 | Função de custo          | MSE, Cross Entropy                        |
 | Função de ativação       | ReLU, Sigmoid, tanh                       |
