@@ -49,6 +49,7 @@ Bruno Antonio dos Santos Bezerra, Erick Vinicius Rebouças Cruz, Gabriel Monteir
 
 #### **Experimentação:**
 - Testes com variações nos seguintes hiperparâmetros:
+  - No MLP:
 
 | Hiperparâmetro          | Valores testados                          |
 |-------------------------|-------------------------------------------|
@@ -59,6 +60,20 @@ Bruno Antonio dos Santos Bezerra, Erick Vinicius Rebouças Cruz, Gabriel Monteir
 | Dropout                | 0, 0.1, 0.3, 0.5                          |
 | Learning rate          | 3×10⁻⁵, 3×10⁻², 3×10⁻¹⁰                   |
 | Épocas                 | 20, 50, 80, 100                           |
+
+ - Na CNN
+ - 
+| Hiperparâmetro          | Valores testados                          |
+|--------------------------|-------------------------------------------|
+| tamanho kernel           | 2 4 8                                     |
+| stride kernel            | 1, 2                                      |
+| Função de custo          | MSE, Cross Entropy                        |
+| Função de ativação       | ReLU, Sigmoid, tanh                       |
+| nr camadas convolução    | 1, 2                                      |
+| Learning rate            | 3×10⁻⁵, 3×10⁻², 3×10⁻¹⁰                   |
+| Épocas                   | 20, 50, 80, 100                           |
+|tamanho kernel max polling| 2, 4                                      |
+|nr mapa caracteristica    | 5, 10, 15                                 |
 
 ---
 
