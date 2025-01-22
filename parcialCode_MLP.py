@@ -1,5 +1,6 @@
 
 #$ Bibliotecas Básicas
+import time
 import matplotlib.pyplot as plt #* para plotar gráficos
 from tqdm import tqdm #* para criar barras de progresso 
 from sklearn.metrics import classification_report #* para obter dados estatíticos de eficiência dos resultados
@@ -40,24 +41,27 @@ class MLP_Model(nn.Module):
         self.L2 = nn.Linear(neuronio1, neuronio2)
         self.L3 = nn.Linear(neuronio2, neuronio3)
 
+        # Ajuste na camada final
+        if isinstance(fnCusto, nn.CrossEntropyLoss):
+            self.L_final = nn.Linear(neuronio1 if camada == 1 else neuronio2 if camada == 2 else neuronio3, 10)  # Saída com 10 neurônios para classificação (10 classes)
+        elif isinstance(fnCusto, nn.MSELoss):
+            self.L_final = nn.Linear(neuronio1 if camada == 1 else neuronio2 if camada == 2 else neuronio3, 1)  # Saída com 1 neurônio para regressão (exemplo)
+
     def forward(self, x):
+        x = self.A1(x) #* Flatten
+        x = self.L1(x) #* Camada de entrada
         if self.X1 == 1:
-            x = self.A1(x) #* Flatten
-            x = self.L1(x) #* Camada de entrada/saída
             x = self.A2(x) #* Função de ativação
         elif self.X1 == 2:
-            x = self.A1(x) #* Flatten
-            x = self.L1(x) #* Camada de entrada
             x = self.A2(x) #* Função de ativação
             x = self.L2(x) #* Camada de saída
         elif self.X1 == 3:
-            x = self.A1(x) #* Flatten
-            x = self.L1(x) #* Camada de entrada
             x = self.A2(x) #* Função de ativação
             x = self.L2(x) #* Camada óculta 1
             x = self.A2(x) #* Função de ativação
             x = self.L3(x) #* Camada de saída
-            
+
+        x = self.L_final(x) #* Saída final
         return x
 
 #$ Função de treinamento
@@ -66,8 +70,17 @@ def training(N_Epochs, model, loss_fn, opt):
 
     for epoch in tqdm(range(N_Epochs + 1)):
         for xb, yb in train_dl:
+            xb, yb = xb.to(device), yb.to(device)
+
+            # Para CrossEntropyLoss, os rótulos devem ser inteiros e a saída deve ser logits
+            if isinstance(loss_fn, nn.CrossEntropyLoss):
+                yb = yb.long()  # Certifique-se de que os rótulos são inteiros
+            # Para MSELoss, os rótulos devem ser floats
+            elif isinstance(loss_fn, nn.MSELoss):
+                yb = yb.float()  # Para MSELoss, os rótulos precisam ser floats
+            
             y_pred = model(xb.float())
-            loss = loss_fn(y_pred, yb.long())
+            loss = loss_fn(y_pred, yb)
 
             opt.zero_grad()
             loss.backward()
@@ -86,7 +99,8 @@ def training(N_Epochs, model, loss_fn, opt):
 #$$ MLP:
 camadas = [1, 2, 3]
 neuronios = [20, 40, 80]
-funcaoCusto = [nn.CrossEntropyLoss(), nn.MSELoss()]
+# funcaoCusto = [nn.MSELoss(), nn.CrossEntropyLoss()]
+funcaoCusto = [nn.CrossEntropyLoss()]
 funcaoAtivacao = [nn.ReLU(), nn.Sigmoid(), nn.Tanh()]
 dropout = [0, 0.1, 0.3, 0.5]
 learningRate = [0.0000000003, 0.00003, 0.03]
@@ -106,8 +120,10 @@ mapasCaracteristica = [5, 10, 15]
 train_dl = DataLoader(MNIST(train_X, train_y), batch_size=256, shuffle=True)
 test_dl = DataLoader(MNIST(test_X, test_y), batch_size=64)
 
+tempoTotal = 0
 count = 1
 results = []
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 for a in camadas:
     for b in funcaoCusto:
         for c in funcaoAtivacao:
@@ -115,7 +131,9 @@ for a in camadas:
                 for e in learningRate:
                     for f in epocas:
                         model = MLP_Model(a, neuronios[0], neuronios[1], neuronios[2], b, c, d, e, f)
+                        model.to(device)
                         opt = torch.optim.Adam(model.parameters(), lr=model.Z1)
+                        inicio = time.time()
                         training(model.W1, model, model.C1, opt)
 
 #$ Avaliação do modelo
@@ -125,19 +143,30 @@ for a in camadas:
                             y_true = []
 
                             for xb, yb in test_dl:
+                                xb, yb = xb.to(device), yb.to(device)
                                 y_predb = model(xb.float())
                                 y_pred.append(y_predb)
                                 y_true.append(yb)
 
-                            y_pred = torch.cat(y_pred)
-                            y_true = torch.cat(y_true)
+                            y_pred = torch.cat(y_pred).to('cpu')
+                            y_true = torch.cat(y_true).to('cpu')
 
                             yf = torch.argmax(y_pred, dim=1)
-                            report = classification_report(y_true, yf, output_dict=True)  # Obter como dicionário
+                            report = classification_report(y_true, yf, output_dict=True, zero_division=0)  # Obter como dicionário
+
+                            final = time.time()
+                            tempoExecucao = final - inicio
+                            tempoTotal = tempoTotal + tempoExecucao
+                            tempoMedio = tempoTotal / count
+                            tempoRestante = tempoMedio * (2592 - count)
+                            horasRestante = tempoRestante // 3600
+                            minutosRestante = (tempoRestante % 3600) // 60
+                            segundosRestante = tempoRestante % 60
 
                             # Adicione os resultados e informações do modelo à lista
                             results.append({
-                                "Iteration": count,
+                                "Device": next(model.parameters()).device,
+                                "Iteration": str(count) + "/2592",
                                 "Camadas": model.X1,
                                 "FnAtivação": model.A2,
                                 "FnCusto": model.C1,
@@ -148,6 +177,9 @@ for a in camadas:
                                 "Recall": report["weighted avg"]["recall"],
                                 "F1-Score": report["weighted avg"]["f1-score"],
                                 "Accuracy": report["accuracy"],
+                                "Duração_Execução": format(tempoExecucao, ".4f").replace(".", ","),
+                                "Média_Duração": format(tempoMedio, ".4f").replace(".", ","),
+                                "Expectativa_Fim": format(horasRestante, ".0f") + "h " + format(minutosRestante, ".0f") + "m " + format(segundosRestante, ".2f") + "s",
                             })
 
                             print(f"Fim do treinamento {count}")
