@@ -1,59 +1,97 @@
-# PROJETOS- IF702
+# PROJETOS - IF702 (Introdução à redes Neurais)
 
-# IF702 - Introdução a Redes Neurais
+# 1o MiniProjeto
 
-## 1o MiniProjeto  -  MLPs e CNNs
+## Introdução
 
-Discente(s): Bruno Antonio dos Santos Bezerra, Erick Vinicius Rebouças Cruz, Gabriel Monteiro Lobão
+Este projeto tem como objetivo explorar e comparar o desempenho de Redes Neurais Multicamadas (MLP) e Redes Neurais Convolucionais (CNN) no reconhecimento de dígitos escritos à mão, utilizando o dataset MNIST. Além disso, realizaremos experimentos com diversas configurações de hiperparâmetros para identificar a arquitetura mais eficiente.
 
-### Instruções e Requisitos
-- Objetivo: Implementar, treinar e optimizar um Multilayer Perceptron (MLP) e uma Convolutional Neuro Network (CNN),  Utilizando o dataset MNIST
+### Discente(s): 
+Bruno Antonio dos Santos Bezerra, Erick Vinicius Rebouças Cruz, Gabriel Monteiro Lobão
 
+---
+
+## Objetivos
+
+1. Implementar e treinar modelos MLP e CNN.
+2. Analisar e comparar o desempenho dos modelos.
+3. Explorar variações de hiperparâmetros para otimização de desempenho.
+
+---
+
+## Instruções e Requisitos
 
 ### Tarefas
 
-__Implementação (50%):__
+#### **Implementação :**
 
-- Construa um MLP com uma camada de entrada, pelo menos duas camadas ocultas e uma camada de saída.
-- Implemente pelo menos duas funções de ativação diferentes para as camadas ocultas; use Sigmoid e Linear para a camada de saída.
-- Implemente forward e backpropagation.
-- Implemente um otimizador de sua escolha, adequado ao problema abordado.
-- Implemente as funções de treinamento e avaliação.
+- **MLP:**
+  - Modelo com:
+    - Uma camada de entrada (784 neurônios).
+    - Camadas ocultas configuráveis.
+    - Uma camada de saída (10 neurônios, uma para cada classe do MNIST).
+  - Suporte para funções de ativação como ReLU, Sigmoid e tanh.
+  - Implementação de técnicas como forward e backpropagation, e otimização (ex.: SGD ou Adam).
 
-__Aplicação (30%):__
+- **CNN:**
+  - Modelo com:
+    - Camadas convolucionais e de pooling.
+    - Dropout para regularização.
+    - Camadas totalmente conectadas para saída.
+  - Treinamento e avaliação nos mesmos parâmetros do MLP.
 
-  Teste se os seus modelos estão funcionando bem com as seguintes tarefas:
-  - Regressão
-  - Classificação binária
+#### **Treinamento e Avaliação:**
+- Treinamento utilizando o dataset MNIST.
+- Avaliação do desempenho em termos de:
+  - Acurácia.
+  - Matriz de confusão.
+  - Curva de perda e validação.
 
-__Experimentação (20%):__
+#### **Experimentação:**
+- Testes com variações nos seguintes hiperparâmetros:
 
-  Teste os seus modelos com variações na arquitetura, no pré-processamento, etc. Escolha pelo menos uma das seguintes opções:
-  - Variações na inicialização de pesos
-  - Variações na arquitetura
-  - Implementação de técnicas de regularização
-  - Visualização das ativações e gradientes
+| Hiperparâmetro          | Valores testados                          |
+|-------------------------|-------------------------------------------|
+| Número de camadas ocultas | 1, 2, 3                                  |
+| Neurônios por camada    | 20, 40, 80                                |
+| Função de custo         | MSE, Cross Entropy                        |
+| Função de ativação      | ReLU, Sigmoid, tanh                       |
+| Dropout                | 0, 0.1, 0.3, 0.5                          |
+| Learning rate          | 3×10⁻⁵, 3×10⁻², 3×10⁻¹⁰                   |
+| Épocas                 | 20, 50, 80, 100                           |
 
+---
 
+## Dataset
 
-### Datasets recomendados:
-Aqui estão alguns datasets recomendados, mas fica a cargo do aluno escolher os datasets que utilizará na atividade, podendo escolher um dataset não listado abaixo.
-- Classificação
+- **Principal:** [MNIST Dataset](http://yann.lecun.com/exdb/mnist/)
 
-  - [Iris](https://archive.ics.uci.edu/dataset/53/iris)
-  - [Breast Cancer Wisconsin (Diagnostic)](https://archive.ics.uci.edu/dataset/17/breast+cancer+wisconsin+diagnostic)
-  - [CDC Diabetes Health Indicators](https://archive.ics.uci.edu/dataset/891/cdc+diabetes+health+indicators)
+---
 
+## Requisitos para Entrega
 
+1. Código: 
+   - Um Jupyter Notebook ou script Python contendo a implementação dos modelos e variações.
+   - Visualizações das curvas de perda, métricas de avaliação e resultados experimentais.
 
-### Requisitos para Entrega
+2. Relatório: 
+   - Análise dos experimentos realizados, incluindo:
+     - Impacto de diferentes configurações de hiperparâmetros no desempenho dos modelos.
+     - Comparação de desempenho entre MLP e CNN.
 
-Um notebook Jupyter (de preferência, o link do colab) ou script Python contendo:
+3. Documentação: 
+   - Este README.md atualizado com instruções claras e completas.
 
-- Código: Implementação completa da MLP.
-- Gráficos e Análises: Gráficos da curva de perda, ativações, gradientes e insights do treinamento, resultantes dos experimentos com parada antecipada e diferentes técnicas de regularização.
-- Relatório: Um breve relatório detalhando o impacto de várias configurações de hiperparâmetros(ex.: inicialização de pesos, número de camadas ocultas e neurônios) e métodos de regularização no desempenho do modelo.
+---
 
+## Dependências
 
+- [Python](https://www.python.org/) (>= 3.8)
+- [PyTorch](https://pytorch.org/)
+- [NumPy](https://numpy.org/)
+- [Matplotlib](https://matplotlib.org/)
+- [Jupyter Notebook](https://jupyter.org/)
 
-## 2o Miniprojeto
+Para instalar as dependências, utilize:
+```bash
+pip install -r requirements.txt
