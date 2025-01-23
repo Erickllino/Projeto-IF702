@@ -6,7 +6,6 @@ from tqdm import tqdm #* para criar barras de progresso
 from sklearn.metrics import classification_report #* para obter dados estatíticos de eficiência dos resultados
 import keras #* para obter o banco de dados necessário para o treinamento
 import pandas as pd
-#! import pandas as pd #*
 #! import seaborn as sns
 
 #$ FrameWork para rede neural utilizado -> Pytorch
@@ -57,7 +56,7 @@ class MLP_Model(nn.Module):
             x = self.L2(x) #* Camada de saída
         elif self.X1 == 3:
             x = self.A2(x) #* Função de ativação
-            x = self.L2(x) #* Camada óculta 1
+            x = self.L2(x) #* Camada oculta 1
             x = self.A2(x) #* Função de ativação
             x = self.L3(x) #* Camada de saída
 
@@ -77,10 +76,10 @@ def training(N_Epochs, model, loss_fn, opt):
                 yb = yb.long()  # Certifique-se de que os rótulos são inteiros
             # Para MSELoss, os rótulos devem ser floats
             elif isinstance(loss_fn, nn.MSELoss):
-                yb = yb.float()  # Para MSELoss, os rótulos precisam ser floats
+                yb = yb.float().unsqueeze(1)  # Para MSELoss, os rótulos precisam ser floats
             
             y_pred = model(xb.float())
-            loss = loss_fn(y_pred, yb)
+            loss = loss_fn(y_pred, yb) #* resultado da rede, resultado esperado
 
             opt.zero_grad()
             loss.backward()
@@ -88,19 +87,13 @@ def training(N_Epochs, model, loss_fn, opt):
 
         loss_list.append(loss.item())
 
-    #! plt.title("Cost Decay")
-    #! plt.plot(loss_list)
-    #! plt.xlabel("Epoch")
-    #! plt.ylabel("Cost")
-    #! plt.show()
-    #! plt.figure(figsize=(14, 6))
-
 #$ Definindo faixas dos parâmetros
 #$$ MLP:
 camadas = [1, 2, 3]
 neuronios = [20, 40, 80]
-# funcaoCusto = [nn.MSELoss(), nn.CrossEntropyLoss()]
-funcaoCusto = [nn.CrossEntropyLoss()]
+#! funcaoCusto = [nn.MSELoss(), nn.CrossEntropyLoss()]
+funcaoCusto = [nn.MSELoss()]
+#! funcaoCusto = [nn.CrossEntropyLoss()]
 funcaoAtivacao = [nn.ReLU(), nn.Sigmoid(), nn.Tanh()]
 dropout = [0, 0.1, 0.3, 0.5]
 learningRate = [0.0000000003, 0.00003, 0.03]
@@ -158,7 +151,7 @@ for a in camadas:
                             tempoExecucao = final - inicio
                             tempoTotal = tempoTotal + tempoExecucao
                             tempoMedio = tempoTotal / count
-                            tempoRestante = tempoMedio * (2592 - count)
+                            tempoRestante = tempoMedio * (432 - count)
                             horasRestante = tempoRestante // 3600
                             minutosRestante = (tempoRestante % 3600) // 60
                             segundosRestante = tempoRestante % 60
@@ -166,13 +159,13 @@ for a in camadas:
                             # Adicione os resultados e informações do modelo à lista
                             results.append({
                                 "Device": next(model.parameters()).device,
-                                "Iteration": str(count) + "/2592",
+                                "Iteration": str(count) + "/432",
                                 "Camadas": model.X1,
                                 "FnAtivação": model.A2,
                                 "FnCusto": model.C1,
                                 "LnRate": model.Z1,
                                 "Epocas": model.W1,
-                                "DropOut": model.D1,
+                                "DropOut": model.D1.p,
                                 "Precision": report["weighted avg"]["precision"],
                                 "Recall": report["weighted avg"]["recall"],
                                 "F1-Score": report["weighted avg"]["f1-score"],
@@ -190,123 +183,3 @@ for a in camadas:
 
                             # Salvando em uma planilha Excel
                             df.to_excel("classification_results.xlsx", index=False, engine='openpyxl')
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                            
-                            # print(classification_report(y_true, yf))
-                            # print()
-                            # print("Fim do treinamento", count)
-                            # print("Dados da RN:")
-                            # print("Camada:", model.X1)
-                            # print("FnAtivação:", model.A2)
-                            # print("FnCusto:", model.C1)
-                            # print("LnRate:", model.Z1)
-                            # print("Epoca:", model.W1)
-                            # print("DropOut:", model.D1)
-                            # count = count + 1
-                            # print("-----------------------------------------------------")
-                            # print()
-
-# # Carregar dados experimentais e visualização
-# df = pd.read_json('Experimentos_MLP.json')
-
-# sns.scatterplot(data=df, x="epochs", y="precision")
-# sns.lineplot(data=df, x="epochs", y="precision", color='orange')
-# sns.boxplot(data=df, x="learning_rate", y="precision")
-# sns.pairplot(df, vars=["epochs", "learning_rate", "precision"])
-# sns.pairplot(df, vars=["epochs", "learning_rate", "precision"], hue="shuffle")
-
-# pivot_table = df.pivot_table(values="precision", index="epochs", columns="learning_rate")
-# sns.heatmap(pivot_table, annot=True, cmap="coolwarm")
-
-# from scipy.stats import linregress
-
-# sns.scatterplot(data=df, x="epochs", y="precision")
-# sns.regplot(data=df, x="epochs", y="precision", scatter=False, color="orange")
-# plt.title("Efeito de Epochs na Precisão")
-# plt.show()
-
-# slope, intercept, r_value, p_value, std_err = linregress(df['epochs'], df['precision'])
-# print(f"A precisão varia {slope:.2f} por época. R²: {r_value**2:.2f}")
-
-# sns.boxplot(data=df, x="learning_rate", y="precision")
-# plt.title("Efeito de Learning Rate na Precisão")
-# plt.show()
-# print(df.groupby("learning_rate")["precision"].mean())
-
-# sns.boxplot(data=df, x="shuffle", y="precision")
-# plt.title("Efeito de Shuffle na Precisão")
-# plt.show()
-# shuffle_mean = df[df["shuffle"] == True]["precision"].mean()
-# no_shuffle_mean = df[df["shuffle"] == False]["precision"].mean()
-# print(f"O shuffle aumenta a precisão em {shuffle_mean - no_shuffle_mean:.2f}")
-
-# # Atualização dos tensores de entrada
-# train_X = train_X[:, None, :, :]
-# test_X = test_X[:, None, :, :]
-
-# train_dl = DataLoader(MNIST(train_X, train_y), batch_size=256, shuffle=True)
-# test_dl = DataLoader(MNIST(test_X, test_y), batch_size=64)
-
-# # Classe do modelo CNN
-# class CNN_Model(nn.Module):
-#     def __init__(self):
-#         super(CNN_Model, self).__init__()
-#         self.Fl = nn.Flatten()
-#         self.C1 = nn.Conv2d(in_channels=1, out_channels=5, kernel_size=4, stride=1)
-#         self.P1 = nn.MaxPool2d(kernel_size=2)
-#         self.C2 = nn.Conv2d(in_channels=5, out_channels=10, kernel_size=4, stride=1)
-#         self.P2 = nn.MaxPool2d(kernel_size=4)
-#         self.L1 = nn.Linear(10 * 2 * 2, 100)
-#         self.L2 = nn.Linear(100, 50)
-#         self.L3 = nn.Linear(50, 10)
-
-#     def forward(self, x):
-#         x = torch.relu(self.C1(x))
-#         x = self.P1(x)
-#         x = torch.relu(self.C2(x))
-#         x = self.P2(x)
-#         x = self.Fl(x)
-#         x = torch.relu(self.L1(x))
-#         x = torch.relu(self.L2(x))
-#         x = self.L3(x)
-#         return x
-
-# # Treinamento do modelo CNN
-# epoch = 50
-# model = CNN_Model()
-# loss = nn.CrossEntropyLoss()
-# opt = torch.optim.Adam(model.parameters(), lr=0.00003)
-# training(epoch, model, loss, opt)
-
-# # Avaliação do modelo CNN
-# with torch.no_grad():
-#     model.eval()
-#     y_pred = []
-#     y_true = []
-
-#     for xb, yb in test_dl:
-#         y_predb = model(xb.float())
-#         y_pred.append(y_predb)
-#         y_true.append(yb)
-
-#     y_pred = torch.cat(y_pred)
-#     y_true = torch.cat(y_true)
-
-#     yf = torch.argmax(y_pred, dim=1)
-#     print(classification_report(y_true, yf))
