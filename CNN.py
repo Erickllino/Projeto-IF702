@@ -27,7 +27,7 @@ class CNN_Model(nn.Module):
         # após a operação de convolução, virá a operação de pooling
         # existem diferentes formas pela biblioteca para fazer a operação de pooling, mas utilizaremos o Max
 
-        self.P1 = nn.MaxPool2d( kernel_size = 4)
+        self.P1 = nn.MaxPool2d( kernel_size = 2)
         
         #segunda camada de convolução + pooling
 
@@ -40,10 +40,10 @@ class CNN_Model(nn.Module):
         # o pytorch não oferece maneiras dinâmicas de fazer alteração nos parâmetros da rede após a criação
         # então o valor das entradas e saídas após cada camada devem ser calculadas: output_size=((input_size−kernel_size+2×padding)/stride) + 1
         # para a primeira camada após a convolução temos output_size = 25
-        # para a primeira camada após o pooling temos output_size =  22
-        # para a segunda camada após a convolução temos output_size = 19
-        # para a segunda camada após o pooling temos output_size = 16
-        # então para a rede MLP teremos uma quantidade de entradas 16x16x10
+        # para a primeira camada após o pooling temos output_size = 13
+        # para a segunda camada após a convolução temos output_size = 10
+        # para a segunda camada após o pooling temos output_size = 2
+        # então para a rede MLP teremos uma quantidade de entradas 10*2*2
 
         #primeira camada terá 100 unidades computacionais
         self.L1 = nn.Linear(10*16*16, 100)
