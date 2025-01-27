@@ -76,7 +76,7 @@ def train_and_evaluate(model, train_loader, test_loader, epoch, loss_fn, optimiz
                 loss = loss_fn(y_pred, yb.float())
             else:
                 loss = loss_fn(y_pred, yb)
-           loss.backward()
+            loss.backward()
             optimizer.step()
     
     # Avaliação no conjunto de teste
@@ -93,8 +93,8 @@ def train_and_evaluate(model, train_loader, test_loader, epoch, loss_fn, optimiz
     return classification_report(all_labels, all_preds, output_dict=True)
 
 # Parâmetros configuráveis do modelo
-mapaCaracs = [[5]]  # Mapas de características
-fullyCons = [[16]]  # Camadas totalmente conectadas
+mapaCaracs = [[5], [5, 10]]  # Mapas de características
+fullyCons = [[16], [16, 32]]  # Camadas totalmente conectadas
 kernels = [2]  # Tamanho do kernel
 strides = [1]  # Stride (passo da convolução)
 poolings = [2]  # Tamanho do kernel de pooling
@@ -136,16 +136,18 @@ for mapaCarac in mapaCaracs:
                         
                         model = create_cnn(fullyCon, kernel, stride, pooling, mapaCarac, dropouts[0], activation_fns[0])
                         optimizer = optim.Adam(model.parameters(), lr=learning_rates[0])
-                        loss_fn = nn.CrossEntropyLoss()
+                        loss_fn = loss_fns[0]
 
                         print(f"Treino {countCNN}/{iteracoesTotal} iniciado:")
+                        print(f"Filter: {mapaCarac}, FullyCon: {fullyCon}, Kernel: {kernel}, Stride: {stride}, Pooling: {pooling}, Epoch: {epoch}")
                         tempoInicio = time.time()
                         report = train_and_evaluate(model, train_loader, test_loader, epoch, loss_fn, optimizer, device)
                         tempoFinal = time.time()
                         tempoExecucao = tempoFinal - tempoInicio
-                        tempoTotal += tempoExecucao
+                        print(f"Treino {countCNN}/{iteracoesTotal} finalizado em {tempoExecucao:.2f}s!")
                         
                         # Calcula e exibe tempo restante estimado
+                        tempoTotal += tempoExecucao
                         tempoMedio = tempoTotal / countCNN
                         tempoRestante = tempoMedio * (iteracoesTotal - countCNN)
                         horasRestante = tempoRestante // 3600

@@ -138,7 +138,7 @@ for mapaCarac in mapaCaracs:
                         
                         model = create_cnn(fullyCon, kernel, stride, pooling, mapaCarac, dropouts[0], activation_fns[0])
                         optimizer = optim.Adam(model.parameters(), lr=learning_rates[0])
-                        loss_fn = nn.CrossEntropyLoss()
+                        loss_fn = loss_fns[0]
 
                         print(f"Treino {countCNN}/{iteracoesTotal} iniciado:")
                         print(f"Filter: {mapaCarac}, FullyCon: {fullyCon}, Kernel: {kernel}, Stride: {stride}, Pooling: {pooling}, Epoch: {epoch}")
