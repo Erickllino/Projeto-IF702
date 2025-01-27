@@ -11,7 +11,7 @@ from openpyxl import Workbook  # Manipulação de arquivos Excel
 from tqdm import tqdm  # Barra de progresso
 
 # Configuração inicial: define a iteração inicial (startAt deve ser >= 1)
-startAt = 485
+startAt = 481
 
 # Função para salvar dados em um arquivo Excel
 def save_to_excel(data, filename="MLP_data " + str(time.time())[11:]):
