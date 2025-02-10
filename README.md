@@ -7,7 +7,7 @@
 Este projeto tem como objetivo explorar e comparar o desempenho de Redes Neurais Multicamadas (MLP) e Redes Neurais Convolucionais (CNN) no reconhecimento de dígitos escritos à mão, utilizando o dataset MNIST. Além disso, realizaremos experimentos com diversas configurações de hiperparâmetros para identificar a arquitetura mais eficiente.
 
 ### Discente(s): 
-Bruno Antonio dos Santos Bezerra, Erick Vinicius Rebouças Cruz, Gabriel Monteiro Lobão
+Bruno Antonio dos Santos Bezerra, Erick Vinicius Rebouças Cruz, Gabriel Monteiro Silva
 
 ---
 
