@@ -110,3 +110,8 @@ Bruno Antonio dos Santos Bezerra, Erick Vinicius Rebouças Cruz, Gabriel Monteir
 Para instalar as dependências, utilize:
 ```bash
 pip install -r requirements.txt
+```
+
+# 2o MiniProjeto
+
+
