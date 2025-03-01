@@ -27,21 +27,15 @@ df['Churn'] = df['Churn'].replace({'Yes': 1, 'No': 0})
 df[['Partner', 'Dependents', 'PhoneService', 'PaperlessBilling', 'Churn']] = df[['Partner', 'Dependents', 'PhoneService', 'PaperlessBilling', 'Churn']].replace({'Yes': 1, 'No': 0})
 df[['MultipleLines', 'OnlineSecurity', 'OnlineBackup', 'DeviceProtection', 'TechSupport', 'StreamingTV', 'StreamingMovies']] = df[['MultipleLines', 'OnlineSecurity', 'OnlineBackup', 'DeviceProtection', 'TechSupport', 'StreamingTV', 'StreamingMovies']].replace({'Yes': 1, 'No': 0, 'No internet service': 0})
 df['gender'] = df['gender'].replace({'Female':1, 'Male':0})
-
 df['MultipleLines'] =  df['MultipleLines'].replace({'No phone service': -1})
-
-
-
 
 
 colunas = ['PaymentMethod', 'Contract', 'InternetService']
 ohe = OneHotEncoder(dtype=int)
-
 colunas_ohe = ohe.fit_transform(df[colunas]).toarray()
 dados = pd.concat([df, pd.DataFrame(colunas_ohe, columns=ohe.get_feature_names_out(colunas))], axis=1)
 
-dados2 = dados.drop(colunas, axis=1)
-data = dados2
+data = dados.drop(colunas, axis=1)
 
 data = data.fillna(0)
 
@@ -203,11 +197,11 @@ def objective(trial):
         trial.set_user_attr(f'val_{metric_name}', float(metric_value))
     
     # Retornamos o menor valor de loss de validação como métrica principal (minimização)
-    best_val_ce = min(history.history['val_loss'])
-    return best_val_ce
+    best_val_auc = max(history.history['val_auc'])
+    return best_val_auc
 
 # Criação e execução do estudo com barra de progresso simplificada
-study = optuna.create_study(direction="minimize")
+study = optuna.create_study(direction="maximize")
 study.optimize(objective, n_trials=500, show_progress_bar=True)
 
 # Exibindo os melhores hiperparâmetros e resultados
@@ -220,12 +214,12 @@ for key, value in study.best_trial.user_attrs.items():
     print(f"{key}: {value:.4f}")
 
 trials_df = study.trials_dataframe()
-
+trials_df['param_observado'] =  'Maximaze AUC'
 
 
 
 # Nome do arquivo
-file_name = 'Projeto Final/optuna_results_with_metrics.xlsx'
+file_name = 'Projeto Final/optuna_results_MLP.xlsx'
 
 # Verificar se o arquivo já existe
 if Path(file_name).exists():
