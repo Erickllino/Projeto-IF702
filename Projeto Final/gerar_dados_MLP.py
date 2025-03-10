@@ -2,17 +2,20 @@ import numpy as np
 import pandas as pd
 import optuna
 from pathlib import Path
-import tensorflow
+
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.preprocessing import StandardScaler
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Dense, Dropout
-from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.losses import BinaryCrossentropy
-from tensorflow.keras.callbacks import EarlyStopping
-from tensorflow.keras.metrics import AUC, Precision, Recall
-from sklearn.metrics import precision_score, recall_score, f1_score, roc_auc_score
 from sklearn.model_selection import KFold
+
+from tensorflow import keras
+from keras.models import Sequential
+from keras.layers import Dense, Dropout
+from keras.optimizers import Adam
+from keras.losses import BinaryCrossentropy
+from keras.callbacks import EarlyStopping
+from keras.metrics import AUC, Precision, Recall
+from sklearn.metrics import precision_score, recall_score, f1_score, roc_auc_score
+
 
 
 
