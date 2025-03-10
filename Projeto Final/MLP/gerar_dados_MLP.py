@@ -22,10 +22,6 @@ from sklearn.metrics import precision_score, recall_score, f1_score, roc_auc_sco
 
 df = pd.read_csv('Projeto Final/data/customer_churn_telecom_services.csv')
 
-
-
-
-
 df['Churn'] = df['Churn'].replace({'Yes': 1, 'No': 0})
 df[['Partner', 'Dependents', 'PhoneService', 'PaperlessBilling', 'Churn']] = df[['Partner', 'Dependents', 'PhoneService', 'PaperlessBilling', 'Churn']].replace({'Yes': 1, 'No': 0})
 df[['MultipleLines', 'OnlineSecurity', 'OnlineBackup', 'DeviceProtection', 'TechSupport', 'StreamingTV', 'StreamingMovies']] = df[['MultipleLines', 'OnlineSecurity', 'OnlineBackup', 'DeviceProtection', 'TechSupport', 'StreamingTV', 'StreamingMovies']].replace({'Yes': 1, 'No': 0, 'No internet service': 0})
@@ -222,7 +218,7 @@ trials_df['param_observado'] =  'Maximaze AUC'
 
 
 # Nome do arquivo
-file_name = 'Projeto Final/optuna_results_MLP.xlsx'
+file_name = 'Projeto Final/MLP/optuna_results_MLP.xlsx'
 
 # Verificar se o arquivo já existe
 if Path(file_name).exists():
