@@ -215,8 +215,6 @@ for key, value in study.best_trial.user_attrs.items():
 trials_df = study.trials_dataframe()
 trials_df['param_observado'] =  'Maximaze AUC'
 
-
-
 # Nome do arquivo
 file_name = 'Projeto Final/MLP/optuna_results_MLP.xlsx'
 
