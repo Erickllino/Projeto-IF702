@@ -18,19 +18,18 @@ from keras.metrics import AUC, Precision, Recall
 # Leitura e preparação dos dados
 df = pd.read_csv('Projeto Final/data/customer_churn_telecom_services.csv')
 
-df['Churn'] = df['Churn'].replace({'Yes': 1, 'No': 0})
-df[['Partner', 'Dependents', 'PhoneService', 'PaperlessBilling', 'Churn']] = df[['Partner', 'Dependents', 'PhoneService', 'PaperlessBilling', 'Churn']].replace({'Yes': 1, 'No': 0})
-df[['MultipleLines', 'OnlineSecurity', 'OnlineBackup', 'DeviceProtection', 'TechSupport', 'StreamingTV', 'StreamingMovies']] = df[['MultipleLines', 'OnlineSecurity', 'OnlineBackup', 'DeviceProtection', 'TechSupport', 'StreamingTV', 'StreamingMovies']].replace({'Yes': 1, 'No': 0, 'No internet service': 0})
-df['gender'] = df['gender'].replace({'Female':1, 'Male':0})
-df['MultipleLines'] =  df['MultipleLines'].replace({'No phone service': -1})
+df.drop_duplicates(df.columns, ignore_index=True)
+df = df.fillna(0)
+#df.dropna(ignore_index=True)
+df = pd.get_dummies(df, drop_first=True)
 
-colunas = ['PaymentMethod', 'Contract', 'InternetService']
-ohe = OneHotEncoder(dtype=int)
-colunas_ohe = ohe.fit_transform(df[colunas]).toarray()
-dados = pd.concat([df, pd.DataFrame(colunas_ohe, columns=ohe.get_feature_names_out(colunas))], axis=1)
+df_data = df.drop(columns='Churn_Yes')
+df_target = df['Churn_Yes']
 
-data = dados.drop(colunas, axis=1)
-data = data.fillna(0)
+
+
+data = df
+
 
 # Função para dividir os dados em folds (treino, validação e teste)
 def k_fold_train_val_test(data, k=5, test_size=0.2, random_state=42):
@@ -58,12 +57,12 @@ df_test = data.iloc[folds[fold_order][1]]
 df_validacao = data.iloc[folds[fold_order][2]]
 
 # Separando as features e o target
-X_treino = df_treino.drop(columns=['Churn'])
-y_treino = df_treino['Churn']
-X_test = df_test.drop(columns=['Churn'])
-y_test = df_test['Churn']
-X_val = df_validacao.drop(columns=['Churn'])
-y_val = df_validacao['Churn']
+X_treino = df_treino.drop(columns=['Churn_Yes'])
+y_treino = df_treino['Churn_Yes']
+X_test = df_test.drop(columns=['Churn_Yes'])
+y_test = df_test['Churn_Yes']
+X_val = df_validacao.drop(columns=['Churn_Yes'])
+y_val = df_validacao['Churn_Yes']
 
 scaler = StandardScaler()
 X_train = scaler.fit_transform(X_treino)
