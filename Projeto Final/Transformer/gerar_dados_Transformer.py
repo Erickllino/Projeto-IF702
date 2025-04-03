@@ -14,39 +14,19 @@ from tensorflow.keras import layers, optimizers, losses, callbacks, metrics
 # Callback de Pruning do Optuna para Keras
 from optuna.integration import KerasPruningCallback
 
-# --- Configuração Inicial e Leitura de Dados ---
-# Garante que o TensorFlow não aloque toda a memória da GPU (se disponível)
-gpus = tf.config.list_physical_devices('GPU')
-if gpus:
-    try:
-        for gpu in gpus:
-            tf.config.experimental.set_memory_growth(gpu, True)
-    except RuntimeError as e:
-        print(e)
 
-# Leitura e preparação dos dados (substitua pelo caminho correto)
-try:
-    df = pd.read_csv('Projeto Final/data/customer_churn_telecom_services.csv')
-except FileNotFoundError:
-    print("Erro: Arquivo 'customer_churn_telecom_services.csv' não encontrado.")
-    print("Por favor, ajuste o caminho no código.")
-    # Exemplo de criação de DataFrame dummy para teste:
-    # data = { 'feature' + str(i): np.random.rand(100) for i in range(10)}
-    # data['Churn_Yes'] = np.random.randint(0, 2, 100)
-    # df = pd.DataFrame(data)
-    exit()
+
+
+df = pd.read_csv('Projeto Final/data/customer_churn_telecom_services.csv')
+
 
 df = df.drop_duplicates(ignore_index=True)
-# Converte 'TotalCharges' para numérico, tratando erros
 df['TotalCharges'] = pd.to_numeric(df['TotalCharges'], errors='coerce')
 df = df.fillna(0)
 
-# Tratamento de categóricas (se necessário) antes de get_dummies
-# Exemplo: df['coluna_categorica'] = df['coluna_categorica'].astype('category').cat.codes
-
 df = pd.get_dummies(df, drop_first=True, dummy_na=False)
 
-# Separa features e target
+
 target_column = 'Churn_Yes'
 if target_column not in df.columns:
     print(f"Erro: Coluna target '{target_column}' não encontrada no DataFrame após get_dummies.")
@@ -60,7 +40,6 @@ df_target = df[target_column].astype(np.int32)
 N_SPLITS = 5
 kf = SKFold(n_splits=N_SPLITS, shuffle=True, random_state=50)
 
-# --- Definição do Modelo Transformer ---
 
 def transformer_encoder(inputs, head_size, num_heads, ff_dim, dropout=0):
     # Atenção e normalização
@@ -111,7 +90,7 @@ def build_transformer_model(input_shape, head_size, num_heads, ff_dim, num_trans
     )
     return model
 
-# --- Função Objetivo do Optuna ---
+
 
 def objective_transformer(trial):
     # Hiperparâmetros a serem otimizados
