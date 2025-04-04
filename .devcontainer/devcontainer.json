@@ -1,0 +1,17 @@
+{
+    "image": "tensorflow/tensorflow:2.10.1-gpu-jupyter",
+    "workspaceFolder": "/app",
+    "runArgs": ["--gpus", "all"],
+    "mounts": ["source=${localWorkspaceFolder},target=/app,type=bind"],
+    "remoteUser": "root",
+    "customizations": {
+      "vscode": {
+        "extensions": [
+          "ms-python.python",
+          "mechatroner.rainbow-csv",
+          "ms-toolsai.jupyter",
+          "eamodio.gitlens"
+        ]
+      }
+    }
+  }
