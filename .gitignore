@@ -1,5 +1,6 @@
 # User excludes
 .~lock*
+backup/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
