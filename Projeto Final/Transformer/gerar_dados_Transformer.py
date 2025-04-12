@@ -98,16 +98,20 @@ def objective_transformer(trial):
     num_heads = trial.suggest_categorical("num_heads", [2, 4, 8])
     ff_dim = trial.suggest_categorical("ff_dim", [64, 128, 256])
     num_transformer_blocks = trial.suggest_int("num_transformer_blocks", 1, 4)
-    mlp_units = trial.suggest_categorical("mlp_units", [[32], [64, 32], [128, 64]])
+    num_hidden_layers = trial.suggest_int("num_hidden_layers", 1, 3)
+
+    mlp_units = []
+    for i in range(num_hidden_layers):
+        units = trial.suggest_int(f"units_layer_{i}", 32, 256, step=32)
+        mlp_units.append(units)
     dropout = trial.suggest_float("dropout", 0.1, 0.5)
     mlp_dropout = trial.suggest_float("mlp_dropout", 0.1, 0.5)
     learning_rate = trial.suggest_float("learning_rate", 1e-5, 1e-2, log=True)
     batch_size = trial.suggest_categorical("batch_size", [32, 64, 128])
     epochs = 100  # Máximo de épocas
 
-    # Callbacks
+    # Callback de EarlyStopping
     early_stopping = callbacks.EarlyStopping(monitor='val_auc', patience=10, mode='max', restore_best_weights=True)
-    pruning_callback = KerasPruningCallback(trial, 'val_auc')
 
     # Listas para armazenar métricas por fold
     val_accuracies = []
@@ -155,8 +159,8 @@ def objective_transformer(trial):
             batch_size=batch_size,
             epochs=epochs,
             validation_data=(X_val_reshaped, y_val),
-            callbacks=[early_stopping, pruning_callback],
-            verbose=0
+            callbacks=[early_stopping],
+            verbose=1
         )
 
         # Avaliação
@@ -197,9 +201,10 @@ def objective_transformer(trial):
     trial.set_user_attr('val_recall', mean_val_recall)
     trial.set_user_attr('val_f1', mean_val_f1)
 
-    return mean_val_auc  # Otimiza pela AUC média
+    return mean_val_ks  # Retorne a métrica que deseja otimizar
 
-study = optuna.create_study(direction="maximize", pruner=optuna.pruners.MedianPruner())
+# Cria o estudo com a direção de maximização
+study = optuna.create_study(direction="maximize", pruner=optuna.pruners.NopPruner())
 
 # Otimização
 N_TRIALS = 500  # Ajuste conforme necessário
